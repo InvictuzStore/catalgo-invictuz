@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INVICTUZ | Catálogo Oficial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+        details > summary { list-style: none; cursor: pointer; outline: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        .active-tap:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900 pb-20">
+
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl z-[100] transform -translate-x-full sidebar overflow-y-auto">
+        <div class="p-5 bg-blue-700 text-white flex justify-between items-center sticky top-0">
+            <span class="font-black italic uppercase text-xl">Categorías</span>
+            <button onclick="toggleMenu()" class="text-2xl active-tap"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-4 space-y-3">
+            <details class="border-b pb-2"><summary class="font-bold p-2 flex justify-between items-center"><span>🚗 Accesorios Automóvil</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
+                <div class="pl-6 py-2 text-blue-600 text-sm italic">Humificador / Auto</div></details>
+            <details class="border-b pb-2"><summary class="font-bold p-2 flex justify-between items-center"><span>🛡️ Defensa Personal</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
+                <div class="pl-6 py-2 text-blue-600 text-sm italic">Bate de defensa personal, Gas pimienta</div></details>
+            <details class="border-b pb-2"><summary class="font-bold p-2 flex justify-between items-center"><span>🧸 Juguetes</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
+                <div class="pl-6 py-2 text-blue-600 text-sm italic space-y-2">
+                    <p>Control remoto, Pistolas de agua, Accesorios / Juguetes, Lego, Pistola hidrogel, Robot, Muñecos, Educativo, Consolas de juego</p>
+                </div></details>
+            <details class="border-b pb-2"><summary class="font-bold p-2 flex justify-between items-center"><span>💻 Tecnología</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
+                <div class="pl-6 py-2 text-blue-600 text-sm italic space-y-2">
+                    <p>Parlantes, Informática, Smartwatch, TV Box, Ventilador, Proyector, Cámara de vigilancia, Iluminación, Energía renovable, Accesorios de audio / video, Auriculares</p>
+                </div></details>
+            <details class="border-b pb-2"><summary class="font-bold p-2 flex justify-between items-center"><span>🏠 Hogar</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
+                <div class="pl-6 py-2 text-blue-600 text-sm italic space-y-2">
+                    <p>Peluches, Toma todo, Electrodoméstico, Iluminación / Hogar, Smartphone, Humificador / Casa, Espejo led</p>
+                </div></details>
+            <details class="border-b pb-2"><summary class="font-bold p-2 flex justify-between items-center"><span>👕 Ropa y Accesorios</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
+                <div class="pl-6 py-2 text-blue-600 text-sm italic">Bolso y equipaje, Sombreros y gorras, Calzado</div></details>
+        </div>
+    </div>
+
+    <header class="bg-blue-700 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleMenu()" class="text-2xl active-tap"><i class="fa-solid fa-bars"></i></b
