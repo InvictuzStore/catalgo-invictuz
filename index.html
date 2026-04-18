@@ -160,13 +160,120 @@
             // que imita cómo leerá tu excel de Control Maestro V4.
             const grid = document.getElementById('product-grid');
             
-            // SIMULACIÓN DE DATOS basada en tu excel "Inventario Catálogo Invictuz V4"
-            catalogData = [
-                { id: 1, nombre: "Capibara Que Respira", precio: "18.99", desc: "Peluche interactivo", img1: "https://via.placeholder.com/300x200?text=Foto+1", img2: "https://via.placeholder.com/300x200?text=Foto+2", img3: "https://via.placeholder.com/300x200?text=Foto+3", categoria: "Peluches" },
-                { id: 2, nombre: "Smart Watch T900 Ultra", precio: "17.99", desc: "Carga inalámbrica", img1: "https://via.placeholder.com/300x200?text=Reloj+1", img2: "https://via.placeholder.com/300x200?text=Reloj+2", img3: "https://via.placeholder.com/300x200?text=Reloj+3", categoria: "Tecnología" },
-                { id: 3, nombre: "Peluche Garfield", precio: "12.00", desc: "Peluche clásico", img1: "https://via.placeholder.com/300x200?text=Garfield+1", img2: "https://via.placeholder.com/300x200?text=Garfield+2", img3: "https://via.placeholder.com/300x200?text=Garfield+3", categoria: "Peluches" },
-                { id: 4, nombre: "Humidificador MGT Auto", precio: "25.99", desc: "Cargador incluido", img1: "https://via.placeholder.com/300x200?text=Auto+1", img2: "https://via.placeholder.com/300x200?text=Auto+2", img3: "https://via.placeholder.com/300x200?text=Auto+3", categoria: "Accesorios" }
-            ];
+            // 1. PEGA TU LINK CSV AQUÍ ADENTRO DE LAS COMILLAS
+const sheetCSV_URL = 'AQUI_PEGA_TU_LINK_CSV'; 
+
+let catalogData = [];
+
+// Funciones de Menú y Navegación
+function toggleMenu(id) {
+    const menu = document.getElementById(id);
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function goHome() {
+    document.getElementById('home-view').style.display = 'block';
+    document.getElementById('detail-view').style.display = 'none';
+    window.scrollTo(0,0);
+}
+
+// 2. FUNCIÓN REAL PARA DESCARGAR Y LEER TODOS LOS PRODUCTOS DE GOOGLE SHEETS
+function loadProducts() {
+    const grid = document.getElementById('product-grid');
+    
+    // Si olvidaste poner el link, te avisará
+    if(sheetCSV_URL === 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQETqay07KwKHfLhweTNSIX9eXgEDCLNq0G9UN5cPfTuYO0oDTSz9ni4hub470qB_Xgl9vVhTHExNmj/pubhtml' || sheetCSV_URL === '') {
+        grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: red; padding: 50px; font-weight: bold;">Error: Aún no has pegado el link CSV de Google Sheets en el código.</div>';
+        return;
+    }
+
+    // PapaParse lee el CSV directamente desde el link
+    Papa.parse(sheetCSV_URL, {
+        download: true,
+        header: true, // Le dice al código que la primera fila de tu Excel son los títulos
+        complete: function(results) {
+            // results.data contiene todas las filas de tu Excel
+            // Filtramos para ignorar filas en blanco que no tengan Nombre
+            catalogData = results.data.filter(item => item.Nombre && item.Nombre.trim() !== "");
+            
+            grid.innerHTML = ''; // Borra el texto de "Cargando..."
+
+            // Por cada producto encontrado en tu Excel, crea una tarjeta
+            catalogData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => showDetail(index);
+
+                // Si alguna celda de imagen está vacía, pone una imagen por defecto
+                const img1 = item.Imagen1 || "https://via.placeholder.com/300x200?text=Sin+Imagen";
+                const img2 = item.Imagen2 || img1; 
+                const img3 = item.Imagen3 || img1;
+                const precio = item.Precio || "0.00";
+                const nombre = item.Nombre || "Producto sin nombre";
+
+                card.innerHTML = `
+                    <div class="carousel">
+                        <img src="${img1}" alt="img1">
+                        <img src="${img2}" alt="img2">
+                        <img src="${img3}" alt="img3">
+                    </div>
+                    <div class="card-info">
+                        <div class="card-price">$${precio}</div>
+                        <div class="card-title">${nombre}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        },
+        error: function(error) {
+            grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: red; padding: 50px;">Error al conectar con Google Sheets. Verifica que el link sea público.</div>';
+            console.error("Error leyendo CSV:", error);
+        }
+    });
+}
+
+// 3. FUNCIÓN PARA MOSTRAR LOS DETALLES EXACTOS DEL PRODUCTO SELECCIONADO
+function showDetail(index) {
+    const product = catalogData[index];
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('detail-view').style.display = 'block';
+    window.scrollTo(0,0);
+
+    document.getElementById('detail-title').innerText = product.Nombre || "Sin nombre";
+    document.getElementById('detail-price').innerText = "$" + (product.Precio || "0.00");
+    document.getElementById('detail-description').innerText = product.Descripcion || "Sin descripción disponible.";
+
+    const img1 = product.Imagen1 || "https://via.placeholder.com/300x200?text=Sin+Imagen";
+    const img2 = product.Imagen2 || ""; // Si no hay foto 2, no la mostramos en detalle
+    const videoUrl = product.Video || ""; // Link del video si lo tienes en el Excel
+
+    let mediaHTML = `<img src="${img1}" alt="Foto Principal">`;
+    if (img2) {
+        mediaHTML += `<img src="${img2}" alt="Foto Secundaria">`;
+    }
+    
+    // Si pusiste un link de video (ej. de YouTube o de Drive público) en la columna Video
+    if (videoUrl) {
+        mediaHTML += `
+        <div style="margin-top: 15px;">
+            <h4>Video del producto</h4>
+            <video width="100%" controls>
+                <source src="${videoUrl}" type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+        </div>`;
+    }
+
+    document.getElementById('detail-media').innerHTML = mediaHTML;
+    
+    document.getElementById('detail-specs').innerHTML = `
+        <li><strong>Categoría:</strong> ${product.Categoria || "General"}</li>
+        <li><strong>Disponibilidad:</strong> En Stock</li>
+    `;
+}
+
+// Al cargar la página, se ejecuta la lectura de la base de datos
+window.onload = loadProducts;
 
             grid.innerHTML = ''; // Limpiar mensaje de carga
 
