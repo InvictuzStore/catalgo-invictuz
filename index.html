@@ -7,205 +7,182 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; }
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
-        details > summary { list-style: none; cursor: pointer; outline: none; }
-        details > summary::-webkit-details-marker { display: none; }
+        body { background-color: #f0f2f5; }
         .sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-press:active { transform: scale(0.92); }
+        .btn-press:active { transform: scale(0.95); }
+        
+        /* Estilos del Carrusel de Fotos */
+        .carousel-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; height: 180px; }
+        .carousel-container::-webkit-scrollbar { display: none; }
+        .carousel-item { flex: 0 0 100%; scroll-snap-align: start; position: relative; }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .skeleton { background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
-<body class="font-sans text-gray-900 pb-24">
+<body class="font-sans text-gray-900 pb-20">
+
+    <script>
+        const URL_DE_TU_SCRIPT = "https://sheetdb.io/api/v1/r35murrz7843e"; 
+    </script>
 
     <div id="sidebar" class="fixed inset-y-0 right-0 w-80 bg-white shadow-[auto_0_25px_50px_rgba(0,0,0,0.5)] z-[100] transform translate-x-full sidebar overflow-y-auto border-l-4 border-yellow-400">
-        <div class="p-6 bg-gradient-to-r from-blue-800 to-blue-600 text-white flex justify-between items-center sticky top-0 shadow-md">
-            <span class="font-black italic uppercase text-2xl tracking-wider">Menú</span>
+        <div class="p-6 bg-gradient-to-r from-blue-800 to-blue-600 text-white flex justify-between items-center sticky top-0 z-10 shadow-md">
+            <span class="font-black italic uppercase text-2xl tracking-wider">Menú Invictuz</span>
             <button onclick="toggleMenu()" class="text-3xl btn-press"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="p-5 space-y-4">
-            <a href="#" onclick="toggleMenu()" class="block bg-gray-100 p-3 rounded-xl font-black text-blue-900 uppercase tracking-wide border-l-4 border-blue-600 hover:bg-gray-200">
-                <i class="fa-solid fa-house mr-2"></i> Inicio
-            </a>
-            <div class="bg-blue-50 p-1 rounded-xl border border-blue-100">
-                <h3 class="font-black uppercase text-blue-800 p-3 mb-1 border-b border-blue-200"><i class="fa-solid fa-tags mr-2"></i> Categorías</h3>
-                <details class="group border-b border-blue-100"><summary class="font-bold p-3 flex justify-between items-center"><span>🚗 Accesorios Automóvil</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
-                    <div class="pl-6 py-2 text-blue-700 text-sm italic font-medium">Humificador / Auto</div></details>
-                <details class="group border-b border-blue-100"><summary class="font-bold p-3 flex justify-between items-center"><span>🛡️ Defensa Personal</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
-                    <div class="pl-6 py-2 text-blue-700 text-sm italic font-medium">Bate de defensa personal<br>Gas pimienta</div></details>
-                <details class="group border-b border-blue-100"><summary class="font-bold p-3 flex justify-between items-center"><span>🧸 Juguetes</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
-                    <div class="pl-6 py-2 text-blue-700 text-sm italic font-medium leading-relaxed">Control remoto<br>Pistolas de agua<br>Accesorios / Juguetes<br>Lego<br>Pistola hidrogel<br>Robot<br>Muñecos<br>Educativo<br>Consolas de juego</div></details>
-                <details class="group border-b border-blue-100"><summary class="font-bold p-3 flex justify-between items-center"><span>💻 Tecnología</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
-                    <div class="pl-6 py-2 text-blue-700 text-sm italic font-medium leading-relaxed">Audífonos<br>Smartwatch<br>Soporte para celular<br>Cargadores</div></details>
-                <details class="group"><summary class="font-bold p-3 flex justify-between items-center"><span>🐾 Peluches</span><i class="fa-solid fa-chevron-down text-xs"></i></summary>
-                    <div class="pl-6 py-2 text-blue-700 text-sm italic font-medium leading-relaxed">Garfield<br>Ganso 130cm<br>Capibara Respiración</div></details>
+        
+        <div class="p-5 space-y-6">
+            <div>
+                <h3 class="font-black uppercase text-blue-800 mb-3 border-b-2 border-yellow-400 inline-block">Sucursales</h3>
+                <div class="space-y-3">
+                    <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="flex items-center gap-3 bg-blue-50 p-3 rounded-xl border border-blue-100 hover:bg-blue-100 transition-colors">
+                        <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <p class="font-black text-sm text-blue-900">Invictuz Cuenca</p>
+                            <p class="text-[10px] text-blue-600 font-bold">Clic para WhatsApp</p>
+                        </div>
+                    </a>
+                    <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="flex items-center gap-3 bg-blue-50 p-3 rounded-xl border border-blue-100 hover:bg-blue-100 transition-colors">
+                        <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <p class="font-black text-sm text-blue-900">Invictuz Quito</p>
+                            <p class="text-[10px] text-blue-600 font-bold">Clic para WhatsApp</p>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="block bg-green-500 text-white text-center p-3 rounded-xl font-black uppercase tracking-wide shadow-md hover:bg-green-600 mt-4 transition-colors">
-                <i class="fa-brands fa-whatsapp text-xl mr-2"></i> Pedir por WhatsApp
-            </a>
+
+            <div>
+                <h3 class="font-black uppercase text-blue-800 mb-3 border-b-2 border-yellow-400 inline-block">Síguenos</h3>
+                <div class="flex gap-4">
+                    <a href="#" class="bg-blue-100 text-blue-800 w-12 h-12 rounded-xl flex items-center justify-center text-xl hover:bg-blue-600 hover:text-white transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center text-xl hover:bg-pink-600 hover:text-white transition-all"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="bg-gray-100 text-black w-12 h-12 rounded-xl flex items-center justify-center text-xl hover:bg-black hover:text-white transition-all"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+
+            <button onclick="window.location.reload()" class="w-full bg-gray-100 p-4 rounded-xl font-black text-blue-900 uppercase tracking-widest border-2 border-gray-200 hover:bg-white">
+                <i class="fa-solid fa-rotate mr-2"></i> Actualizar Catálogo
+            </button>
         </div>
     </div>
 
-    <div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden backdrop-blur-sm transition-opacity"></div>
+    <div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden backdrop-blur-sm"></div>
 
-    <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white p-4 sticky top-0 z-30 shadow-lg flex justify-between items-center border-b-4 border-yellow-400">
+    <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 sticky top-0 z-30 shadow-xl flex justify-between items-center border-b-4 border-yellow-400">
         <div class="flex items-center gap-3">
-            <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-2xl shadow-inner border-2 border-yellow-400">
-                🐧
-            </div>
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-3xl shadow-lg border-2 border-yellow-400">🐧</div>
             <div class="flex flex-col">
-                <h1 class="font-black italic text-2xl tracking-tighter leading-none text-white drop-shadow-md">INVICTUZ</h1>
-                <span class="text-[10px] font-black text-yellow-300 uppercase tracking-widest">Catálogo Oficial</span>
+                <h1 class="font-black italic text-2xl tracking-tighter leading-none text-white drop-shadow-lg">INVICTUZ</h1>
+                <span class="text-[10px] font-black text-yellow-300 uppercase tracking-[0.2em]">Store Ecuador</span>
             </div>
         </div>
-        <button onclick="toggleMenu()" class="text-xl btn-press p-2.5 bg-blue-700 hover:bg-blue-800 rounded-xl shadow-inner border border-blue-500"><i class="fa-solid fa-bars"></i></button>
+        <button onclick="toggleMenu()" class="text-xl btn-press p-3 bg-blue-800 rounded-2xl shadow-inner border border-blue-500 hover:bg-blue-900"><i class="fa-solid fa-bars-staggered"></i></button>
     </header>
 
-    <div class="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-blue-900 font-black text-center p-2 text-sm uppercase tracking-widest overflow-hidden border-b-4 border-blue-800 shadow-md">
-        <div class="animate-[pulse_2s_ease-in-out_infinite]">
-            🔥 Entregas directas en Cuenca, Quito y envíos a todo el país 🔥
-        </div>
+    <div class="bg-yellow-400 text-blue-900 font-black text-center py-2 text-[10px] uppercase tracking-[0.3em] border-b-4 border-blue-900">
+        <i class="fa-solid fa-truck-fast mr-2"></i> Envíos Seguros a nivel nacional 🇪🇨
     </div>
 
-    <main class="p-4 max-w-7xl mx-auto mt-4">
-        <div class="flex items-center gap-3 mb-6">
-            <h2 class="font-black text-2xl text-blue-900 uppercase border-l-4 border-yellow-400 pl-3">Destacados</h2>
-            <span class="bg-yellow-400 text-blue-900 text-xs font-black px-2 py-1 rounded-md uppercase tracking-wider animate-pulse">¡Nuevos!</span>
-        </div>
-        
-        <div class="product-grid">
-            
-            <div class="bg-white rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-100 flex flex-col hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] transition-shadow">
-                <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center group">
-                    <i class="fa-solid fa-robot text-5xl text-gray-300 group-hover:scale-110 transition-transform"></i>
-                    <span class="absolute top-2 right-2 bg-blue-600 text-white text-[10px] font-black px-2 py-1 rounded-full uppercase">Stock</span>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <span class="text-[10px] font-black text-blue-600 uppercase mb-1 tracking-wider">Tecnología</span>
-                    <h3 class="font-black text-gray-800 leading-tight mb-1 text-sm md:text-base">Humidificador Robot Lujo</h3>
-                    <p class="text-xs text-gray-500 font-medium mb-4">USB-C • 15x10cm • Blanco/Plata</p>
-                    <div class="mt-auto flex justify-between items-end">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-gray-400 line-through font-bold">$35.00</span>
-                            <span class="font-black text-2xl text-blue-900 leading-none">$30.00</span>
-                        </div>
-                        <button class="bg-yellow-400 text-blue-900 w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-md btn-press hover:bg-yellow-500 add-btn">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-100 flex flex-col hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] transition-shadow">
-                <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center group">
-                    <i class="fa-solid fa-cat text-5xl text-gray-300 group-hover:scale-110 transition-transform"></i>
-                    <span class="absolute top-2 left-2 bg-yellow-400 text-blue-900 text-[10px] font-black px-2 py-1 rounded-full uppercase"><i class="fa-solid fa-star text-[8px]"></i> Top Ventas</span>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <span class="text-[10px] font-black text-blue-600 uppercase mb-1 tracking-wider">Peluches</span>
-                    <h3 class="font-black text-gray-800 leading-tight mb-1 text-sm md:text-base">Peluche Garfield Clásico</h3>
-                    <p class="text-xs text-gray-500 font-medium mb-4">Naranja • Mediano • Premium</p>
-                    <div class="mt-auto flex justify-between items-end">
-                        <span class="font-black text-2xl text-blue-900 leading-none">$15.00</span>
-                        <button class="bg-yellow-400 text-blue-900 w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-md btn-press hover:bg-yellow-500 add-btn">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-100 flex flex-col hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] transition-shadow">
-                <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center group">
-                    <i class="fa-solid fa-feather-pointed text-5xl text-gray-300 group-hover:scale-110 transition-transform"></i>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <span class="text-[10px] font-black text-blue-600 uppercase mb-1 tracking-wider">Peluches</span>
-                    <h3 class="font-black text-gray-800 leading-tight mb-1 text-sm md:text-base">Ganso Gigante Blanco</h3>
-                    <p class="text-xs text-gray-500 font-medium mb-4">130 cm • Extra Suave</p>
-                    <div class="mt-auto flex justify-between items-end">
-                        <span class="font-black text-2xl text-blue-900 leading-none">$25.00</span>
-                        <button class="bg-yellow-400 text-blue-900 w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-md btn-press hover:bg-yellow-500 add-btn">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-100 flex flex-col hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] transition-shadow">
-                <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center group">
-                    <i class="fa-solid fa-paw text-5xl text-gray-300 group-hover:scale-110 transition-transform"></i>
-                    <span class="absolute top-2 right-2 bg-blue-600 text-white text-[10px] font-black px-2 py-1 rounded-full uppercase">Stock</span>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <span class="text-[10px] font-black text-blue-600 uppercase mb-1 tracking-wider">Juguetes</span>
-                    <h3 class="font-black text-gray-800 leading-tight mb-1 text-sm md:text-base">Capibara Sensorial</h3>
-                    <p class="text-xs text-gray-500 font-medium mb-4">Café • Simula Respiración</p>
-                    <div class="mt-auto flex justify-between items-end">
-                        <span class="font-black text-2xl text-blue-900 leading-none">$22.00</span>
-                        <button class="bg-yellow-400 text-blue-900 w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-md btn-press hover:bg-yellow-500 add-btn">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-100 flex flex-col hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] transition-shadow">
-                <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center group">
-                    <i class="fa-solid fa-mobile-screen-button text-5xl text-gray-300 group-hover:scale-110 transition-transform"></i>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <span class="text-[10px] font-black text-blue-600 uppercase mb-1 tracking-wider">Tecnología</span>
-                    <h3 class="font-black text-gray-800 leading-tight mb-1 text-sm md:text-base">Soporte Celular Ergonómico</h3>
-                    <p class="text-xs text-gray-500 font-medium mb-4">Negro • Ajustable de escritorio</p>
-                    <div class="mt-auto flex justify-between items-end">
-                        <span class="font-black text-2xl text-blue-900 leading-none">$10.00</span>
-                        <button class="bg-yellow-400 text-blue-900 w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-md btn-press hover:bg-yellow-500 add-btn">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+    <main class="p-4 max-w-7xl mx-auto">
+        <div id="contenedor-productos" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
+            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
+            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
+            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
         </div>
     </main>
 
-    <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="fixed bottom-6 right-6 bg-gradient-to-tr from-green-500 to-green-400 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-[0_10px_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-transform z-50 border-2 border-white animate-bounce">
+    <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-4xl shadow-[0_10px_30px_rgba(34,197,94,0.5)] z-50 border-4 border-white animate-bounce hover:scale-110 transition-transform">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
     <script>
-        // Función para abrir y cerrar el menú lateral
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            
             sidebar.classList.toggle('translate-x-full');
-            
-            if(overlay.classList.contains('hidden')) {
-                overlay.classList.remove('hidden');
-                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-            } else {
-                overlay.classList.add('opacity-0');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
+            overlay.classList.toggle('hidden');
+        }
+
+        async function cargarProductos() {
+            const contenedor = document.getElementById('contenedor-productos');
+            try {
+                const respuesta = await fetch(URL_DE_TU_SCRIPT);
+                const productos = await respuesta.json();
+                contenedor.innerHTML = ''; 
+
+                productos.forEach(prod => {
+                    if(!prod["Nombre del Producto"]) return;
+
+                    // Manejo de hasta 3 fotos (buscamos en columnas Imagen1, Imagen2, Imagen3)
+                    const fotos = [prod.Imagen1, prod.Imagen2, prod.Imagen3].filter(f => f);
+                    const tieneFotos = fotos.length > 0;
+
+                    const card = `
+                        <div class="bg-white rounded-3xl shadow-[0_10px_20px_rgba(0,0,0,0.05)] overflow-hidden border border-gray-100 flex flex-col hover:shadow-2xl transition-all group">
+                            <div class="relative w-full overflow-hidden bg-gray-50 border-b-2 border-gray-50">
+                                <div class="carousel-container">
+                                    ${tieneFotos ? fotos.map(f => `
+                                        <div class="carousel-item"><img src="${f}" loading="lazy"></div>
+                                    `).join('') : `
+                                        <div class="carousel-item flex items-center justify-center bg-gray-100 text-gray-300">
+                                            <i class="fa-solid fa-image text-5xl"></i>
+                                        </div>
+                                    `}
+                                </div>
+                                ${fotos.length > 1 ? `
+                                    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                                        ${fotos.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full bg-white/60"></div>`).join('')}
+                                    </div>
+                                ` : ''}
+                                <div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-blue-900 text-[8px] font-black px-2 py-1 rounded-lg border border-yellow-400 shadow-sm">
+                                    🇪🇨 ECUADOR
+                                </div>
+                            </div>
+
+                            <div class="p-4 flex-1 flex flex-col">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-[9px] font-black text-blue-600 uppercase tracking-wider">${prod.Categoría || 'Producto'}</span>
+                                    <span class="bg-green-100 text-green-700 text-[8px] font-black px-1.5 py-0.5 rounded italic">En Stock</span>
+                                </div>
+                                <h3 class="font-black text-gray-800 leading-tight mb-1 text-sm md:text-base">${prod["Nombre del Producto"]}</h3>
+                                <p class="text-[10px] text-gray-400 font-medium mb-3 line-clamp-2">${prod.Descripción || 'No hay descripción disponible'}</p>
+                                
+                                <div class="mt-auto flex justify-between items-end">
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Precio Invictuz</span>
+                                        <span class="font-black text-2xl text-blue-900 tracking-tighter">${prod.Precio || '$0.00'}</span>
+                                    </div>
+                                    <button onclick="notificar('${prod["Nombre del Producto"]}')" class="bg-yellow-400 text-blue-900 w-11 h-11 rounded-2xl flex items-center justify-center font-black shadow-[0_5px_15px_rgba(250,204,21,0.4)] btn-press hover:bg-yellow-500 hover:-rotate-6 transition-all">
+                                        <i class="fa-solid fa-cart-plus text-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    contenedor.innerHTML += card;
+                });
+            } catch (error) {
+                contenedor.innerHTML = '<div class="col-span-full p-10 text-center"><i class="fa-solid fa-triangle-exclamation text-4xl text-yellow-500 mb-4"></i><p class="font-black text-blue-900">Verifica la URL de tu Google Script</p></div>';
             }
         }
 
-        // Función para mostrar notificación al añadir producto
-        document.querySelectorAll('.add-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const toast = document.createElement('div');
-                toast.className = 'fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-blue-800 text-yellow-300 font-black px-6 py-3 rounded-full shadow-2xl z-50 transition-all duration-300 border-2 border-yellow-400 uppercase tracking-wider text-sm';
-                toast.innerHTML = '<i class="fa-solid fa-check mr-2"></i> ¡Producto Añadido!';
-                
-                document.body.appendChild(toast);
+        function notificar(nombre) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-blue-900 text-yellow-300 font-black px-8 py-4 rounded-3xl shadow-2xl z-[200] border-2 border-yellow-400 uppercase tracking-widest text-xs flex items-center gap-3 animate-bounce';
+            toast.innerHTML = `<i class="fa-solid fa-check-double text-lg"></i> Añadido: ${nombre}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            }, 2500);
+        }
 
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translate(-50%, 20px)';
-                    setTimeout(() => toast.remove(), 300);
-                }, 2000);
-            });
-        });
+        // Ejecutar carga
+        cargarProductos();
     </script>
 </body>
 </html>
