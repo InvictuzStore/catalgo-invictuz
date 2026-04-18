@@ -3,126 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INVICTUZ STORE | Catálogo Oficial</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Invictuz - Catálogo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; }
-        .sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-press:active { transform: scale(0.95); }
+        /* Estilos Generales */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #ffffff; color: #333; }
+        a { text-decoration: none; color: inherit; }
         
-        /* Estilos del Carrusel de Fotos */
-        .carousel-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; height: 180px; }
-        .carousel-container::-webkit-scrollbar { display: none; }
-        .carousel-item { flex: 0 0 100%; scroll-snap-align: start; position: relative; }
-        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+        /* Encabezado */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #1a1a1a; color: white; position: sticky; top: 0; z-index: 1000; }
+        .logo { display: flex; align-items: center; cursor: pointer; font-size: 24px; font-weight: bold; }
+        .logo i { margin-right: 10px; color: #f39c12; }
+        .search-bar { flex-grow: 1; margin: 0 20px; max-width: 400px; }
+        .search-bar input { width: 100%; padding: 8px 15px; border-radius: 20px; border: none; outline: none; }
+        .nav-icons { display: flex; align-items: center; gap: 15px; position: relative; }
+        .nav-icons i { font-size: 20px; cursor: pointer; }
+        .country-icon { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 14px; }
         
-        .skeleton { background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
-        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        /* Menús desplegables */
+        .dropdown { position: absolute; top: 35px; right: 0; background: white; color: black; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; min-width: 150px; flex-direction: column; overflow: hidden; }
+        .dropdown a { padding: 10px 15px; border-bottom: 1px solid #eee; display: block; }
+        .dropdown a:hover { background: #f5f5f5; }
+        
+        /* Vista Principal (Catálogo) */
+        .catalog-container { padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .product-card { border: 1px solid #ddd; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .carousel::-webkit-scrollbar { display: none; }
+        .carousel img { width: 100%; height: 200px; object-fit: cover; scroll-snap-align: start; flex-shrink: 0; }
+        .card-info { padding: 15px; text-align: center; }
+        .card-price { color: #e74c3c; font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .card-title { font-size: 14px; font-weight: 500; }
+
+        /* Vista de Detalle de Producto */
+        #detail-view { display: none; padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+        .detail-images { display: flex; flex-direction: column; gap: 10px; }
+        .detail-images img, .detail-video { width: 100%; border-radius: 10px; object-fit: cover; }
+        .detail-info h1 { margin-top: 0; }
+        .detail-price { font-size: 24px; color: #e74c3c; font-weight: bold; margin: 15px 0; }
+        
+        /* Botón Flotante WhatsApp */
+        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
+        .wa-btn { background: #25D366; color: white; padding: 10px 15px; border-radius: 50px; display: flex; align-items: center; gap: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
+        .wa-btn:hover { background: #1ebe5d; transform: scale(1.05); }
+
+        /* Footer (Recomendación para Redes Sociales) */
+        footer { background: #1a1a1a; color: white; text-align: center; padding: 30px 20px; margin-top: 50px; }
+        .social-icons { display: flex; justify-content: center; gap: 20px; font-size: 24px; margin-top: 10px; }
+        .social-icons a:hover { color: #f39c12; }
     </style>
 </head>
-<body class="font-sans text-gray-900 pb-20">
+<body>
 
-    <script>
-        const URL_DE_TU_SCRIPT = "TU_URL_AQUÍ"; 
-    </script>
-
-    <div id="sidebar" class="fixed inset-y-0 right-0 w-80 bg-white shadow-[auto_0_25px_50px_rgba(0,0,0,0.5)] z-[100] transform translate-x-full sidebar overflow-y-auto border-l-4 border-yellow-400">
-        <div class="p-6 bg-gradient-to-r from-blue-800 to-blue-600 text-white flex justify-between items-center sticky top-0 z-10 shadow-md">
-            <span class="font-black italic uppercase text-2xl tracking-wider">Menú Invictuz</span>
-            <button onclick="toggleMenu()" class="text-3xl btn-press"><i class="fa-solid fa-xmark"></i></button>
+    <header>
+        <div class="logo" onclick="goHome()">
+            <i class="fa-solid fa-crown"></i> Invictuz
         </div>
         
-        <div class="p-5 space-y-6">
-            <div>
-                <h3 class="font-black uppercase text-blue-800 mb-3 border-b-2 border-yellow-400 inline-block">Sucursales</h3>
-                <div class="space-y-3">
-                    <a href="https://wa.me/593983749193" target="_blank" class="flex items-center gap-3 bg-blue-50 p-3 rounded-xl border border-blue-100 hover:bg-blue-100 transition-colors">
-                        <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-brands fa-whatsapp text-xl"></i></div>
-                        <div>
-                            <p class="font-black text-sm text-blue-900">Invictuz Cuenca</p>
-                            <p class="text-[10px] text-blue-600 font-bold">+593 98 374 9193</p>
-                        </div>
-                    </a>
-                    <a href="https://wa.me/593987024960" target="_blank" class="flex items-center gap-3 bg-blue-50 p-3 rounded-xl border border-blue-100 hover:bg-blue-100 transition-colors">
-                        <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-brands fa-whatsapp text-xl"></i></div>
-                        <div>
-                            <p class="font-black text-sm text-blue-900">Invictuz Quito</p>
-                            <p class="text-[10px] text-blue-600 font-bold">+593 98 702 4960</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="font-black uppercase text-blue-800 mb-3 border-b-2 border-yellow-400 inline-block">Síguenos</h3>
-                <div class="flex gap-4">
-                    <a href="#" class="bg-blue-100 text-blue-800 w-12 h-12 rounded-xl flex items-center justify-center text-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-blue-200"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center text-xl hover:bg-pink-600 hover:text-white transition-all shadow-sm border border-pink-200"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="bg-gray-100 text-black w-12 h-12 rounded-xl flex items-center justify-center text-xl hover:bg-black hover:text-white transition-all shadow-sm border border-gray-200"><i class="fa-brands fa-tiktok"></i></a>
-                </div>
-            </div>
-
-            <button onclick="window.location.reload()" class="w-full bg-gray-100 p-4 rounded-xl font-black text-blue-900 uppercase tracking-widest border-2 border-gray-200 hover:bg-white shadow-sm mt-4">
-                <i class="fa-solid fa-rotate mr-2"></i> Actualizar Catálogo
-            </button>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar productos...">
         </div>
-    </div>
 
-    <div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden backdrop-blur-sm transition-opacity"></div>
+        <div class="nav-icons">
+            <i class="fa-solid fa-bars" onclick="toggleMenu('categories-menu')"></i>
+            <div id="categories-menu" class="dropdown">
+                <a href="#" onclick="goHome()">Inicio</a>
+                <a href="#">Tecnología</a>
+                <a href="#">Peluches</a>
+                <a href="#">Juguetes</a>
+            </div>
 
-<header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 sticky top-0 z-30 shadow-xl flex justify-between items-center border-b-4 border-yellow-400">
-        <div class="flex items-center gap-3">
-            <img src="Gemini_Generated_Image_64kuky64kuky64ku.png" alt="Logo Invictuz" class="w-12 h-12 rounded-full object-cover shadow-lg border-2 border-yellow-400 bg-white">
-            
-            <div class="flex flex-col">
-                <h1 class="font-black italic text-2xl tracking-tighter leading-none text-white drop-shadow-lg">INVICTUZ</h1>
-                <span class="text-[10px] font-black text-yellow-300 uppercase tracking-[0.2em]">Store Ecuador</span>
+            <i class="fa-solid fa-circle-info" onclick="toggleMenu('info-menu')"></i>
+            <div id="info-menu" class="dropdown">
+                <a href="#"><strong>¿Quiénes somos?</strong></a>
+                <a href="#"><i class="fa-solid fa-location-dot"></i> Sucursal Quito</a>
+                <a href="#"><i class="fa-solid fa-location-dot"></i> Sucursal Cuenca</a>
+            </div>
+
+            <div class="country-icon">
+                <span>EC</span>
+                <img src="https://flagcdn.com/w20/ec.png" alt="Ecuador" style="width: 20px; border-radius: 2px;">
             </div>
         </div>
-        <button onclick="toggleMenu()" class="text-xl btn-press p-3 bg-blue-800 rounded-2xl shadow-inner border border-blue-500 hover:bg-blue-900"><i class="fa-solid fa-bars-staggered"></i></button>
     </header>
 
-    <div class="bg-yellow-400 text-blue-900 font-black text-center py-2 text-[10px] uppercase tracking-[0.3em] border-b-4 border-blue-900">
-        <i class="fa-solid fa-truck-fast mr-2"></i> Envíos Seguros a nivel nacional 🇪🇨
-    </div>
-
-    <main class="p-4 max-w-7xl mx-auto">
-        <div id="contenedor-productos" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
-            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
-            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
-            <div class="h-80 skeleton rounded-3xl shadow-lg"></div>
+    <main id="home-view">
+        <div class="catalog-container" id="product-grid">
+            <div style="grid-column: span 2; text-align: center; padding: 50px;">
+                Cargando productos desde Google Sheets...
+            </div>
         </div>
     </main>
 
-    <a href="https://wa.me/593983749193" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-4xl shadow-[0_10px_30px_rgba(34,197,94,0.5)] z-50 border-4 border-white animate-bounce hover:scale-110 transition-transform">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <main id="detail-view">
+        <button onclick="goHome()" style="margin-bottom: 20px; padding: 10px; cursor: pointer; border:none; background:#eee; border-radius:5px;">
+            <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
+        </button>
+        
+        <div class="detail-grid">
+            <div class="detail-images" id="detail-media">
+                </div>
+            
+            <div class="detail-info">
+                <h1 id="detail-title">Nombre del Producto</h1>
+                <div class="detail-price" id="detail-price">$0.00</div>
+                <h3>Descripción</h3>
+                <p id="detail-description">Descripción del producto aquí.</p>
+                <h3>Especificaciones</h3>
+                <ul id="detail-specs">
+                    </ul>
+            </div>
+        </div>
+    </main>
+
+    <div class="whatsapp-float">
+        <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="wa-btn">
+            <i class="fa-brands fa-whatsapp"></i> Quito
+        </a>
+        <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="wa-btn">
+            <i class="fa-brands fa-whatsapp"></i> Cuenca
+        </a>
+    </div>
+
+    <footer>
+        <p>Síguenos en nuestras redes sociales</p>
+        <p>El mejor lugar para poner tus redes es aquí abajo, no estorban la compra y dan confianza.</p>
+        <div class="social-icons">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+    </footer>
 
     <script>
-        function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('translate-x-full');
-            if(overlay.classList.contains('hidden')) {
-                overlay.classList.remove('hidden');
-                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-            } else {
-                overlay.classList.add('opacity-0');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
-            }
+        // 1. URL DE TU GOOGLE SHEET PUBLICADO COMO CSV (Instrucciones abajo)
+        const sheetCSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQETqay07KwKHfLhweTNSIX9eXgEDCLNq0G9UN5cPfTuYO0oDTSz9ni4hub470qB_Xgl9vVhTHExNmj/pub?gid=121696207&single=true&output=csv'; 
+        
+        let catalogData = [];
+
+        // Funciones de Menú
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+        function goHome() {
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('detail-view').style.display = 'none';
         }
 
-        async function cargarProductos() {
-            const contenedor = document.getElementById('contenedor-productos');
-            try {
-                const respuesta = await fetch(URL_DE_TU_SCRIPT);
-                const productos = await respuesta.json();
-                contenedor.innerHTML = ''; 
+        // Función para cargar los datos de Google Sheets (Simulada para este ejemplo)
+        async function loadProducts() {
+            // Como necesitas configurar tu link real, aquí dejo una estructura de ejemplo
+            // que imita cómo leerá tu excel de Control Maestro V4.
+            const grid = document.getElementById('product-grid');
+            
+            // SIMULACIÓN DE DATOS basada en tu excel "Inventario Catálogo Invictuz V4"
+            catalogData = [
+                { id: 1, nombre: "Capibara Que Respira", precio: "18.99", desc: "Peluche interactivo", img1: "https://via.placeholder.com/300x200?text=Foto+1", img2: "https://via.placeholder.com/300x200?text=Foto+2", img3: "https://via.placeholder.com/300x200?text=Foto+3", categoria: "Peluches" },
+                { id: 2, nombre: "Smart Watch T900 Ultra", precio: "17.99", desc: "Carga inalámbrica", img1: "https://via.placeholder.com/300x200?text=Reloj+1", img2: "https://via.placeholder.com/300x200?text=Reloj+2", img3: "https://via.placeholder.com/300x200?text=Reloj+3", categoria: "Tecnología" },
+                { id: 3, nombre: "Peluche Garfield", precio: "12.00", desc: "Peluche clásico", img1: "https://via.placeholder.com/300x200?text=Garfield+1", img2: "https://via.placeholder.com/300x200?text=Garfield+2", img3: "https://via.placeholder.com/300x200?text=Garfield+3", categoria: "Peluches" },
+                { id: 4, nombre: "Humidificador MGT Auto", precio: "25.99", desc: "Cargador incluido", img1: "https://via.placeholder.com/300x200?text=Auto+1", img2: "https://via.placeholder.com/300x200?text=Auto+2", img3: "https://via.placeholder.com/300x200?text=Auto+3", categoria: "Accesorios" }
+            ];
 
-                productos.forEach(prod => {
-                    if(!prod["Nombre del Producto"]) return;
+            grid.innerHTML = ''; // Limpiar mensaje de carga
 
-                    // Manejo de hasta 3 fotos (buscamos en columnas Imagen1, Imagen2, Imagen3)
-                    const fotos = [prod.Imagen1, prod.Imagen2, prod.Imagen3].filter(f
+            catalogData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => showDetail(index);
+
+                card.innerHTML = `
+                    <div class="carousel">
+                        <img src="${item.img1}" alt="img1">
+                        <img src="${item.img2}" alt="img2">
+                        <img src="${item.img3}" alt="img3">
+                    </div>
+                    <div class="card-info">
+                        <div class="card-price">$${item.precio}</div>
+                        <div class="card-title">${item.nombre}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Mostrar Detalle del Producto
+        function showDetail(index) {
+            const product = catalogData[index];
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('detail-view').style.display = 'block';
+            window.scrollTo(0,0);
+
+            document.getElementById('detail-title').innerText = product.nombre;
+            document.getElementById('detail-price').innerText = "$" + product.precio;
+            document.getElementById('detail-description').innerText = product.desc;
+
+            const mediaContainer = document.getElementById('detail-media');
+            mediaContainer.innerHTML = `
+                <img src="${product.img1}" alt="Foto 1">
+                <img src="${product.img2}" alt="Foto 2">
+                <div style="background:#000; color:white; height:200px; display:flex; align-items:center; justify-content:center; border-radius:10px;">
+                    <i class="fa-solid fa-play fa-3x"></i><br>Video del producto
+                </div>
+            `;
+            
+            document.getElementById('detail-specs').innerHTML = `
+                <li><strong>Categoría:</strong> ${product.categoria}</li>
+                <li><strong>Disponibilidad:</strong> En Stock</li>
+            `;
+        }
+
+        // Cargar productos al iniciar
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>
