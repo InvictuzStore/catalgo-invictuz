@@ -27,8 +27,13 @@
         .dropdown a { padding: 10px 15px; border-bottom: 1px solid #eee; display: block; }
         .dropdown a:hover { background: #f5f5f5; }
         
-        /* Vista Principal (Catálogo) */
-        .catalog-container { padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        /* Vista Principal (Catálogo) - AHORA 3 COLUMNAS */
+        .catalog-container { padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        /* Ajuste para pantallas más pequeñas */
+        @media (max-width: 900px) { .catalog-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .catalog-container { grid-template-columns: 1fr; } }
+
         .product-card { border: 1px solid #ddd; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
@@ -37,6 +42,12 @@
         .card-info { padding: 15px; text-align: center; }
         .card-price { color: #e74c3c; font-size: 18px; font-weight: bold; margin-bottom: 5px; }
         .card-title { font-size: 14px; font-weight: 500; }
+
+        /* Paginación */
+        .pagination { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
+        .page-btn { padding: 10px 15px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .page-btn.active { background: #f39c12; color: white; border-color: #f39c12; }
+        .page-btn:hover:not(.active) { background: #eee; }
 
         /* Vista de Detalle de Producto */
         #detail-view { display: none; padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
@@ -52,7 +63,7 @@
         .wa-btn { background: #25D366; color: white; padding: 10px 15px; border-radius: 50px; display: flex; align-items: center; gap: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
         .wa-btn:hover { background: #1ebe5d; transform: scale(1.05); }
 
-        /* Footer (Recomendación para Redes Sociales) */
+        /* Footer */
         footer { background: #1a1a1a; color: white; text-align: center; padding: 30px 20px; margin-top: 50px; }
         .social-icons { display: flex; justify-content: center; gap: 20px; font-size: 24px; margin-top: 10px; }
         .social-icons a:hover { color: #f39c12; }
@@ -61,7 +72,7 @@
 <body>
 
     <header>
-        <div class="logo" onclick="goHome()">
+        <div class="logo" onclick="filterCategory('Todos')">
             <i class="fa-solid fa-crown"></i> Invictuz
         </div>
         
@@ -72,10 +83,10 @@
         <div class="nav-icons">
             <i class="fa-solid fa-bars" onclick="toggleMenu('categories-menu')"></i>
             <div id="categories-menu" class="dropdown">
-                <a href="#" onclick="goHome()">Inicio</a>
-                <a href="#">Tecnología</a>
-                <a href="#">Peluches</a>
-                <a href="#">Juguetes</a>
+                <a href="#" onclick="filterCategory('Todos'); toggleMenu('categories-menu')">Inicio (Todos)</a>
+                <a href="#" onclick="filterCategory('Tecnología'); toggleMenu('categories-menu')">Tecnología</a>
+                <a href="#" onclick="filterCategory('Peluches'); toggleMenu('categories-menu')">Peluches</a>
+                <a href="#" onclick="filterCategory('Juguetes'); toggleMenu('categories-menu')">Juguetes</a>
             </div>
 
             <i class="fa-solid fa-circle-info" onclick="toggleMenu('info-menu')"></i>
@@ -93,11 +104,13 @@
     </header>
 
     <main id="home-view">
+        <h2 id="category-title" style="text-align: center; margin-top: 20px; color: #333;">Todos los Productos</h2>
         <div class="catalog-container" id="product-grid">
-            <div style="grid-column: span 2; text-align: center; padding: 50px;">
+            <div style="grid-column: span 3; text-align: center; padding: 50px;">
                 Cargando productos desde Google Sheets...
             </div>
         </div>
+        <div class="pagination" id="pagination-container"></div>
     </main>
 
     <main id="detail-view">
@@ -122,10 +135,10 @@
     </main>
 
     <div class="whatsapp-float">
-        <a href="https://wa.me/593983749193" target="_blank" class="wa-btn">
+        <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="wa-btn">
             <i class="fa-brands fa-whatsapp"></i> Quito
         </a>
-        <a href="https://wa.me/593987024960" target="_blank" class="wa-btn">
+        <a href="https://wa.me/593XXXXXXXXX" target="_blank" class="wa-btn">
             <i class="fa-brands fa-whatsapp"></i> Cuenca
         </a>
     </div>
@@ -140,24 +153,125 @@
     </footer>
 
     <script>
-        // EL LINK CSV CORRECTO YA ESTÁ AQUÍ
         const sheetCSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQETqay07KwKHfLhweTNSIX9eXgEDCLNq0G9UN5cPfTuYO0oDTSz9ni4hub470qB_Xgl9vVhTHExNmj/pub?gid=121696207&single=true&output=csv'; 
 
-        let catalogData = [];
+        let allProducts = [];      // Guarda todos los productos descargados
+        let filteredProducts = []; // Guarda los productos según la categoría seleccionada
+        let currentPage = 1;
+        const itemsPerPage = 6;    // Máximo de productos por página
 
-        // Funciones de Menú y Navegación
+        // Funciones de Menú
         function toggleMenu(id) {
             const menu = document.getElementById(id);
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
+        // Regresar a la vista de cuadrícula
         function goHome() {
             document.getElementById('home-view').style.display = 'block';
             document.getElementById('detail-view').style.display = 'none';
             window.scrollTo(0,0);
         }
 
-        // Función para descargar y leer todos los productos
+        // Convertidor de imágenes de Google Drive para web
+        function getImageUrl(url) {
+            if (!url) return "https://via.placeholder.com/300x200?text=Sin+Imagen";
+            if (url.includes('drive.google.com/file/d/')) {
+                const match = url.match(/\/d\/(.+?)\//);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                }
+            }
+            return url;
+        }
+
+        // Filtrar por categoría
+        function filterCategory(category) {
+            currentPage = 1; // Volver a la página 1 al cambiar de categoría
+            document.getElementById('category-title').innerText = category === 'Todos' ? 'Todos los Productos' : category;
+            
+            if (category === 'Todos') {
+                filteredProducts = allProducts;
+            } else {
+                // Filtra ignorando mayúsculas/minúsculas
+                filteredProducts = allProducts.filter(item => 
+                    item.Categoria && item.Categoria.toLowerCase().includes(category.toLowerCase())
+                );
+            }
+            renderGrid();
+            goHome(); // Asegurarse de estar en la vista de catálogo
+        }
+
+        // Dibujar los productos en la pantalla (Paginados)
+        function renderGrid() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = ''; 
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 50px;">No se encontraron productos en esta categoría.</div>';
+                renderPagination();
+                return;
+            }
+
+            // Lógica matemática para cortar la lista en pedazos de 6
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const productsToShow = filteredProducts.slice(start, end);
+
+            productsToShow.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                // Buscar el índice real del producto en la lista original para mostrar bien los detalles
+                const originalIndex = allProducts.findIndex(p => p.Nombre === item.Nombre);
+                card.onclick = () => showDetail(originalIndex);
+
+                const img1 = getImageUrl(item.Imagen1);
+                const img2 = getImageUrl(item.Imagen2) !== "https://via.placeholder.com/300x200?text=Sin+Imagen" ? getImageUrl(item.Imagen2) : img1; 
+                const img3 = getImageUrl(item.Imagen3) !== "https://via.placeholder.com/300x200?text=Sin+Imagen" ? getImageUrl(item.Imagen3) : img1;
+                
+                const precio = item.Precio || "0.00";
+                const nombre = item.Nombre || "Producto sin nombre";
+
+                card.innerHTML = `
+                    <div class="carousel">
+                        <img src="${img1}" alt="img1">
+                        <img src="${img2}" alt="img2">
+                        <img src="${img3}" alt="img3">
+                    </div>
+                    <div class="card-info">
+                        <div class="card-price">$${precio}</div>
+                        <div class="card-title">${nombre}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            renderPagination();
+        }
+
+        // Dibujar los botones de números abajo
+        function renderPagination() {
+            const container = document.getElementById('pagination-container');
+            container.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+            if (totalPages <= 1) return; // Si solo hay 1 página, no mostrar números
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.innerText = i;
+                btn.onclick = () => {
+                    currentPage = i;
+                    renderGrid();
+                    window.scrollTo(0,0);
+                };
+                container.appendChild(btn);
+            }
+        }
+
+        // Función para descargar los datos
         function loadProducts() {
             const grid = document.getElementById('product-grid');
 
@@ -165,44 +279,21 @@
                 download: true,
                 header: true,
                 complete: function(results) {
-                    catalogData = results.data.filter(item => item.Nombre && item.Nombre.trim() !== "");
-                    grid.innerHTML = ''; 
-
-                    catalogData.forEach((item, index) => {
-                        const card = document.createElement('div');
-                        card.className = 'product-card';
-                        card.onclick = () => showDetail(index);
-
-                        const img1 = item.Imagen1 || "https://via.placeholder.com/300x200?text=Sin+Imagen";
-                        const img2 = item.Imagen2 || img1; 
-                        const img3 = item.Imagen3 || img1;
-                        const precio = item.Precio || "0.00";
-                        const nombre = item.Nombre || "Producto sin nombre";
-
-                        card.innerHTML = `
-                            <div class="carousel">
-                                <img src="${img1}" alt="img1">
-                                <img src="${img2}" alt="img2">
-                                <img src="${img3}" alt="img3">
-                            </div>
-                            <div class="card-info">
-                                <div class="card-price">$${precio}</div>
-                                <div class="card-title">${nombre}</div>
-                            </div>
-                        `;
-                        grid.appendChild(card);
-                    });
+                    // Filtrar filas vacías
+                    allProducts = results.data.filter(item => item.Nombre && item.Nombre.trim() !== "");
+                    filteredProducts = allProducts; // Al inicio, mostrar todos
+                    renderGrid(); // Construir la primera página
                 },
                 error: function(error) {
-                    grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: red; padding: 50px;">Error al conectar con Google Sheets. Verifica que el link siga siendo público.</div>';
+                    grid.innerHTML = '<div style="grid-column: span 3; text-align: center; color: red; padding: 50px;">Error al conectar con Google Sheets.</div>';
                     console.error("Error leyendo CSV:", error);
                 }
             });
         }
 
-        // Función para mostrar los detalles del producto
+        // Mostrar detalles de 1 solo producto
         function showDetail(index) {
-            const product = catalogData[index];
+            const product = allProducts[index];
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('detail-view').style.display = 'block';
             window.scrollTo(0,0);
@@ -211,12 +302,12 @@
             document.getElementById('detail-price').innerText = "$" + (product.Precio || "0.00");
             document.getElementById('detail-description').innerText = product.Descripcion || "Sin descripción disponible.";
 
-            const img1 = product.Imagen1 || "https://via.placeholder.com/300x200?text=Sin+Imagen";
-            const img2 = product.Imagen2 || ""; 
+            const img1 = getImageUrl(product.Imagen1);
+            const img2 = getImageUrl(product.Imagen2); 
             const videoUrl = product.Video || ""; 
 
             let mediaHTML = `<img src="${img1}" alt="Foto Principal">`;
-            if (img2) {
+            if (product.Imagen2 && product.Imagen2.trim() !== "") {
                 mediaHTML += `<img src="${img2}" alt="Foto Secundaria">`;
             }
             
@@ -239,7 +330,6 @@
             `;
         }
 
-        // Cargar productos al iniciar
         window.onload = loadProducts;
     </script>
 </body>
